@@ -36,12 +36,6 @@ namespace AutomationFramework_GI.TestCases
         }
 
         [Test]
-        public void fnTest() 
-        {
-            
-        }
-
-        [Test]
         public void fnTest_DataDriven()
         {
 
