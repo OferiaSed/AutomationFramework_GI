@@ -38,19 +38,11 @@ namespace AutomationFramework_GI.TestCases
         [Test]
         public void fnTest() 
         {
-
-            //string strTemp = clsLogin.RandomString(8);
-
-            clsMegaIntake clsMG = new clsMegaIntake();
-            clsLogin login = new clsLogin();
-            fnNavigateToUrl(clsMG.fnGetURLEnv(("UAT")));
-            login.fnForgotPasswordVerification("8");
-
-            //login.fnTwoFactors("5");
+            
         }
 
         [Test]
-        public void Test_fnPageLoadPass()
+        public void fnTest_DataDriven()
         {
 
             bool blStatus = true;

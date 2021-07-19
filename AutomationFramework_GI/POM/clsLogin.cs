@@ -161,7 +161,7 @@ namespace AutomationFramework_GI.POM
                                 //Enter username/captcha
                                 clsReportResult.fnLog("Forgot Password", "The required field messages are displayed as expected.", "info", true, true);
                                 mega.fnEnterTextWElm("Username*", "//input[@id='uname']", objData.fnGetValue("User", ""), true, false);
-                                do { Thread.Sleep(TimeSpan.FromSeconds(30)); }
+                                do { Thread.Sleep(TimeSpan.FromSeconds(10)); }
                                 while (clsWE.fnGetAttribute(clsWE.fnGetWe("//input[@id='captcha-input']"), "Captcha", "value", false, false) == "");
                                 clsWE.fnClick(clsWE.fnGetWe("//button[text()='Submit']"), "Submit", false);
                                 //Verify that email is received to change the password
@@ -174,7 +174,6 @@ namespace AutomationFramework_GI.POM
                                     string strNewPass = RandomString(8);
                                     mega.fnEnterTextWElm("New Password", "//input[@id='new-pwd']", strNewPass, false, false);
                                     mega.fnEnterTextWElm("Confirm New Password", "//input[@id='new-pwd-v']", strNewPass, false, false);
-                                    clsWE.fnClick(clsWE.fnGetWe("//input[@id='show-password-text']"), "Show Password", false);
                                     clsWE.fnClick(clsWE.fnGetWe("//button[text()='Submit']"), "Submit", true);
                                     //Verify that password was changes successfully
                                     if (clsWE.fnElementExist("Password Message", "//div[contains(text(), 'Your password has been successfully')]", false))
@@ -184,7 +183,7 @@ namespace AutomationFramework_GI.POM
                                         objSaveData.fnSaveValue(ConfigurationManager.AppSettings["FilePath"], "LogInData", "Password", intRow, strNewPass);
 
                                         //Verify email confirmation for password reset
-                                        if (fnReadTextEmail(objData.fnGetValue("EmailAcc", ""), objData.fnGetValue("PassAcC", ""), "password for your account was "))
+                                        if (fnReadTextEmail(objData.fnGetValue("EmailAcc", ""), objData.fnGetValue("PassAcC", ""), "password for your account was changed"))
                                         {
                                             clsReportResult.fnLog("Forgot Password", "The  Password Change Confirmation email was received successfully.", "Pass", true, true);
                                         }
@@ -238,13 +237,13 @@ namespace AutomationFramework_GI.POM
             return strRnd + strRnd2;
         }
 
-        private bool fnReadTextEmail(string pstrUser, string pstrPassword, string pstrVal)
+        public bool fnReadTextEmail(string pstrUser, string pstrPassword, string pstrVal)
         {
             clsEmail email = new clsEmail();
             email.strFromEmail = pstrUser;
             email.strPassword = pstrPassword;
             email.strServer = "popgmail";
-            return email.fnReadSimpleEmail(pstrVal);
+            return email.fnReadSimpleEmail(pstrUser, pstrPassword, pstrVal);
         }
 
 

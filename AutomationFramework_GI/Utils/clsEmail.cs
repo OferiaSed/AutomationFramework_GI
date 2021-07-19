@@ -173,7 +173,7 @@ namespace AutomationFramework_GI.Utils
                             string strTemp = messagepart.GetBodyAsText();
                             if (strTemp.Contains("reset your password"))
                             {
-                                string[] arrSeparators = { "your browser: ", "---" };
+                                string[] arrSeparators = { "your browser: ", "</span>" };
                                 string[] arrToken = strTemp.Split(arrSeparators, System.StringSplitOptions.RemoveEmptyEntries);
                                 strURL = arrToken[1].Replace("\n", "").Replace("\r", "");
                                 //client.DeleteMessage(intRow);
@@ -190,7 +190,7 @@ namespace AutomationFramework_GI.Utils
             return strURL;
         }
 
-        public bool fnReadSimpleEmail(string pstrText)
+        public bool fnReadSimpleEmail(string pstrUser, string pstrPassword, string pstrVal)
         {
             int intTimeAttemp = 0;
             bool bFound = false;
@@ -209,10 +209,9 @@ namespace AutomationFramework_GI.Utils
                     {
                         //Get Token as Plan Text
                         string strTemp = messagepart.GetBodyAsText();
-                        if (strTemp.Contains(pstrText))
+                        if (strTemp.Contains(pstrVal))
                         {
                             bFound = true;
-                            //client.DeleteMessage(intRow);
                             break;
                         }
                     }
@@ -223,10 +222,9 @@ namespace AutomationFramework_GI.Utils
                         if (messagepart != null)
                         {
                             string strTemp = messagepart.GetBodyAsText();
-                            if (strTemp.Contains("reset your password"))
+                            if (strTemp.Contains(pstrVal))
                             {
                                 bFound = true;
-                                //client.DeleteMessage(intRow);
                                 break;
                             }
                         }
@@ -239,6 +237,8 @@ namespace AutomationFramework_GI.Utils
             while (intTimeAttemp < 12 && !bFound);
             return bFound;
         }
+
+
 
     }
 }
