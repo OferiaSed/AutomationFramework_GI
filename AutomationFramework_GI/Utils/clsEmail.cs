@@ -21,7 +21,7 @@ namespace AutomationFramework_GI.Utils
         public string strContentBody;
         private string[] arrSTP = new string[2];
 
-        public clsEmail() 
+        public clsEmail()
         {
             strServer = "";
             strFromEmail = "";
@@ -32,7 +32,7 @@ namespace AutomationFramework_GI.Utils
         }
 
 
-        public void fnSendSimpleEmail() 
+        public void fnSendSimpleEmail()
         {
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress(strFromEmail);
@@ -41,7 +41,7 @@ namespace AutomationFramework_GI.Utils
             mail.Body = strContentBody;
             mail.IsBodyHtml = true;
             fnGetServerName(strServer);
-            if (strServer != "" && arrSTP[0] != "invalid" && strFromEmail != "" && strPassword != "") 
+            if (strServer != "" && arrSTP[0] != "invalid" && strFromEmail != "" && strPassword != "")
             {
                 SmtpClient smtp = new SmtpClient(arrSTP[0], Convert.ToInt32(arrSTP[1]));
                 smtp.Credentials = new NetworkCredential(strFromEmail, strPassword);
@@ -50,9 +50,9 @@ namespace AutomationFramework_GI.Utils
             }
         }
 
-        private void fnGetServerName(string pstrServer) 
+        private void fnGetServerName(string pstrServer)
         {
-            switch (strServer.ToUpper()) 
+            switch (strServer.ToUpper())
             {
                 case "POPGMAIL":
                     arrSTP[0] = "pop.gmail.com";
@@ -79,115 +79,6 @@ namespace AutomationFramework_GI.Utils
                     arrSTP[1] = "invalid";
                     break;
             }
-        }
-
-        public string fnReadTwoFactorToken()
-        {
-            int intTimeAttemp = 0;
-            string strToken = "";
-            fnGetServerName(strServer);
-            //Perform unitl 2Factor is received for 2 minutes
-            do
-            {
-                Pop3Client client = new Pop3Client();
-                client.Connect(arrSTP[0], Convert.ToInt32(arrSTP[1]), true);
-                client.Authenticate(strFromEmail, strPassword, AuthenticationMethod.UsernameAndPassword);
-                int intEmailcount = client.GetMessageCount();
-                for (int intRow = intEmailcount; intRow >= 1; intRow--)
-                {
-                    Message message = client.GetMessage(intRow);
-                    MessagePart messagepart = message.FindFirstPlainTextVersion();
-                    if (messagepart != null)
-                    {
-                        //Get Token as Plan Text
-                        string strTemp = messagepart.GetBodyAsText();
-                        if (strTemp.Contains("code is:"))
-                        {
-                            string[] arrSeparators = { "code is:", "\r\nThe code" };
-                            string[] arrToken = strTemp.Split(arrSeparators, System.StringSplitOptions.RemoveEmptyEntries);
-                            strToken = arrToken[1];
-                            client.DeleteMessage(intRow);
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        //Get Token as HTML
-                        messagepart = message.FindFirstHtmlVersion();
-                        if (messagepart != null)
-                        {
-                            string strTemp = messagepart.GetBodyAsText();
-                            if (strTemp.Contains("code is:"))
-                            {
-                                string[] arrSeparators = { "code is:", "<br/>" };
-                                string[] arrToken = strTemp.Split(arrSeparators, System.StringSplitOptions.RemoveEmptyEntries);
-                                strToken = arrToken[1];
-                                client.DeleteMessage(intRow);
-                                break;
-                            }
-                        }
-                    }
-                }
-                intTimeAttemp++;
-                if (strToken == "") { Thread.Sleep(TimeSpan.FromSeconds(10)); }
-                client.Disconnect();
-            }
-            while (intTimeAttemp < 12 && strToken == "");
-            return strToken;
-        }
-
-        public string fnReadForgotPassword()
-        {
-            int intTimeAttemp = 0;
-            string strURL = "";
-            fnGetServerName(strServer);
-            do
-            {
-                Pop3Client client = new Pop3Client();
-                client.Connect(arrSTP[0], Convert.ToInt32(arrSTP[1]), true);
-                client.Authenticate(strFromEmail, strPassword, AuthenticationMethod.UsernameAndPassword);
-                int intEmailcount = client.GetMessageCount();
-                for (int intRow = intEmailcount; intRow >= 1; intRow--)
-                {
-                    Message message = client.GetMessage(intRow);
-                    MessagePart messagepart = message.FindFirstPlainTextVersion();
-                    if (messagepart != null)
-                    {
-                        //Get Token as Plan Text
-                        string strTemp = messagepart.GetBodyAsText();
-                        if (strTemp.Contains("reset your password"))
-                        {
-                            string[] arrSeparators = { "your browser: ", "---" };
-                            string[] arrToken = strTemp.Split(arrSeparators, System.StringSplitOptions.RemoveEmptyEntries);
-                            strURL = arrToken[1].Replace("\n", "").Replace("\r", "");
-                            //client.DeleteMessage(intRow);
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        //Get Token as HTML
-                        messagepart = message.FindFirstHtmlVersion();
-                        if (messagepart != null)
-                        {
-                            string strTemp = messagepart.GetBodyAsText();
-                            if (strTemp.Contains("reset your password"))
-                            {
-                                string[] arrSeparators = { "your browser: ", "</span>" };
-                                string[] arrToken = strTemp.Split(arrSeparators, System.StringSplitOptions.RemoveEmptyEntries);
-                                strURL = arrToken[1].Replace("\n", "").Replace("\r", "");
-                                //client.DeleteMessage(intRow);
-                                break;
-                            }
-                        }
-                    }
-                }
-                intTimeAttemp++;
-                if (strURL == "") { Thread.Sleep(TimeSpan.FromSeconds(10)); }
-                client.Disconnect();
-            }
-            while (intTimeAttemp < 12 && strURL == "") ;
-            return strURL;
         }
 
         public bool fnReadSimpleEmail(string pstrUser, string pstrPassword, string pstrVal)
@@ -238,6 +129,58 @@ namespace AutomationFramework_GI.Utils
             return bFound;
         }
 
+
+        public string fnReadEmailText(string pstrContainsText, string pstrStartWithPlainText, string pstrEndwithPlainText, string pstrStartWithHtml, string pstrEndwithHtml)
+        {
+            string strEmailText = "";
+            int intTimeAttemp = 0;
+            fnGetServerName(strServer);
+            do
+            {
+                Pop3Client client = new Pop3Client();
+                client.Connect(arrSTP[0], Convert.ToInt32(arrSTP[1]), true);
+                client.Authenticate(strFromEmail, strPassword, AuthenticationMethod.UsernameAndPassword);
+                int intEmailcount = client.GetMessageCount();
+                for (int intRow = intEmailcount; intRow >= 1; intRow--)
+                {
+                    Message message = client.GetMessage(intRow);
+                    MessagePart messagepart = message.FindFirstPlainTextVersion();
+                    if (messagepart != null)
+                    {
+                        //Get Token as Plan Text
+                        string strTemp = messagepart.GetBodyAsText();
+                        if (strTemp.Contains(pstrContainsText))
+                        {
+                            string[] arrSeparators = { pstrStartWithPlainText, pstrEndwithPlainText };
+                            string[] arrToken = strTemp.Split(arrSeparators, System.StringSplitOptions.RemoveEmptyEntries);
+                            strEmailText = arrToken[1].Replace("\n", "").Replace("\r", "");
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        //Get Token as HTML
+                        messagepart = message.FindFirstHtmlVersion();
+                        if (messagepart != null)
+                        {
+                            string strTemp = messagepart.GetBodyAsText();
+                            if (strTemp.Contains(pstrContainsText))
+                            {
+                                string[] arrSeparators = { pstrStartWithHtml, pstrEndwithHtml };
+                                string[] arrToken = strTemp.Split(arrSeparators, System.StringSplitOptions.RemoveEmptyEntries);
+                                strEmailText = arrToken[1].Replace("\n", "").Replace("\r", "");
+                                break;
+                            }
+                        }
+                    }
+                }
+                intTimeAttemp++;
+                if (strEmailText == "") { Thread.Sleep(TimeSpan.FromSeconds(10)); }
+                client.Disconnect();
+            }
+            while (intTimeAttemp < 12 && strEmailText == "");
+            return strEmailText;
+        }
 
 
     }

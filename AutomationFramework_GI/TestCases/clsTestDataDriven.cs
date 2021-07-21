@@ -36,6 +36,16 @@ namespace AutomationFramework_GI.TestCases
         }
 
         [Test]
+        public void fnTest() 
+        {
+            clsLogin login = new clsLogin();
+            clsMegaIntake clsMG = new clsMegaIntake();
+            fnNavigateToUrl(clsMG.fnGetURLEnv("UAT"));
+            login.fnForgotUsernameVerification("9");
+        }
+
+
+        [Test]
         public void fnTest_DataDriven()
         {
 
@@ -65,6 +75,12 @@ namespace AutomationFramework_GI.TestCases
                                 break;
                             case "2FALOGIN":
                                 blStatus = clsLogin.fnTwoFactorsVerification(TempValue);
+                                break;
+                            case "FORGOTPASSWORD":
+                                blStatus = clsLogin.fnForgotPasswordVerification(TempValue);
+                                break;
+                            case "FORGOTUSERNAME":
+                                blStatus = clsLogin.fnForgotUsernameVerification(TempValue);
                                 break;
                             case "CREATEINTAKE":
                                 blStatus = clsMG.fnCreateSubmitIntake(TempValue);
