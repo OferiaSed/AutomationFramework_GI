@@ -106,15 +106,18 @@ namespace AutomationFramework_GI.POM
                 {
                     blResult = false;
                     clsWebElements.fnExceptionHandling(objException);
-                    //Console.WriteLine("SendKeys is not working for: " + pstrWebElement + " an exception was found: " + objException.Message);
-                    //clsReportResult.fnLog("SendKeysFail", "SendKeys is not working for: " + pstrElement + " with value: " + pstrValue + " and locator: " + pstrWebElement, "Fail", pblScreenShot, pblHardStop); 
                 }
                 if (blResult)
-                { clsReportResult.fnLog("SendKeysPass", "SendKeys for: " + pstrElement + " with value: " + pstrValue, "Pass", pblScreenShot, pblHardStop); }
+                {
+                    //Step - Click on Submit Button
+                    clsReportResult.fnLog("SendKeys", "Step - Sendkeys on " + pstrElement, "info", false, false);
+                    clsReportResult.fnLog("SendKeys", "The SendKeys for: " + pstrElement + " with value: " + pstrValue + " was done successfully.", "Pass", pblScreenShot, pblHardStop);
+                }
                 else
                 {
                     blResult = false;
-                    clsReportResult.fnLog("SendKeysFail", "SendKeys is not working for: " + pstrElement + " with value: " + pstrValue + " and locator: " + pstrWebElement, "Fail", pblScreenShot, pblHardStop);
+                    clsReportResult.fnLog("SendKeys", "Step - Sendkeys on " + pstrElement, "info", false, false);
+                    clsReportResult.fnLog("SendKeys", "The SendKeys for: " + pstrElement + " with value: " + pstrValue + " has failed.", "Fail", true, pblHardStop, pstrHardStopMsg);
                 }
             }
             return blResult;
@@ -182,7 +185,8 @@ namespace AutomationFramework_GI.POM
                     clsReportResult.fnLog("SelectDropdown", "Step - Select Dropdown: " + pstrElement + " With Value: " + pstrValue, "Info", false);
                     IWebElement objDropDown = clsWebBrowser.objDriver.FindElement(By.XPath(pstrWebElement));
                     objDropDown.Click();
-                    Thread.Sleep(1500);
+                    Thread.Sleep(1000);
+                    //Thread.Sleep(1500);
 
                     if (IsElementPresent("//span[@class='select2-results']"))
                     {
@@ -211,9 +215,10 @@ namespace AutomationFramework_GI.POM
                     if (IsElementPresent("//span[@data-bind='text: headerClientName']"))
                     {
                         objDropDown = clsWebBrowser.objDriver.FindElement(By.XPath("//span[@data-bind='text: headerClientName']"));
-                        Thread.Sleep(1500);
-                        objDropDown.Click();
                         Thread.Sleep(1000);
+                        //Thread.Sleep(1500);
+                        objDropDown.Click();
+                        //Thread.Sleep(1000);
                     }
                 }
             }

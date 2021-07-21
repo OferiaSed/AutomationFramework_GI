@@ -51,8 +51,8 @@ C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\bin\D
 C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\bin\Debug\System.Web.Razor.xml
 C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\bin\Debug\WebDriver.xml
 C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\bin\Debug\WebDriver.Support.xml
-C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\obj\Debug\AutomationFramework_GI.csproj.AssemblyReference.cache
 C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\obj\Debug\AutomationFramework_GI.csproj.CoreCompileInputs.cache
 C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\obj\Debug\AutomationFramework_GI.csproj.CopyComplete
 C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\obj\Debug\AutomationFramework_GI.exe
 C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\obj\Debug\AutomationFramework_GI.pdb
+C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\obj\Debug\AutomationFramework_GI.csproj.AssemblyReference.cache
