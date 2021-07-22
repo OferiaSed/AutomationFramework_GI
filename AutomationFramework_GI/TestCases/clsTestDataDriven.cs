@@ -41,7 +41,8 @@ namespace AutomationFramework_GI.TestCases
             clsLogin login = new clsLogin();
             clsMegaIntake clsMG = new clsMegaIntake();
             fnNavigateToUrl(clsMG.fnGetURLEnv("UAT"));
-            login.fnForgotUsernameVerification("9");
+            //login.fnForgotUsernameVerification("9");
+            login.fnTimeoutSessionVerification("12");
         }
 
 
@@ -82,6 +83,12 @@ namespace AutomationFramework_GI.TestCases
                             case "FORGOTUSERNAME":
                                 blStatus = clsLogin.fnForgotUsernameVerification(TempValue);
                                 break;
+                            case "EXPIREDUSERRESTRICTION":
+                                blStatus = clsLogin.fnExpiredUserRestriction(TempValue);
+                                break;
+                            case "TIMEOUTSESSION":
+                                blStatus = clsLogin.fnTimeoutSessionVerification(TempValue);
+                                break;
                             case "CREATEINTAKE":
                                 blStatus = clsMG.fnCreateSubmitIntake(TempValue);
                                 break;
@@ -98,6 +105,11 @@ namespace AutomationFramework_GI.TestCases
                         }
 
                     }
+                    //Save Execution Status
+                    if (blStatus)
+                    { objData.fnSaveValue(ConfigurationManager.AppSettings["FilePath"], "TestCases", "Status", intRow, "Pass"); }
+                    else
+                    { objData.fnSaveValue(ConfigurationManager.AppSettings["FilePath"], "TestCases", "Status", intRow, "Fail"); }
                 }
             }
         }
