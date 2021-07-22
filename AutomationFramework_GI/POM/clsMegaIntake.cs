@@ -1,6 +1,7 @@
 ﻿using AutomationFramework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SpreadsheetLight;
 using System;
@@ -122,6 +123,55 @@ namespace AutomationFramework_GI.POM
             }
             return blResult;
         }
+
+        public bool fnCleanAndEnterText(string pstrElement, string pstrWebElement, string pstrValue, bool pblScreenShot = false, bool pblHardStop = false, string pstrHardStopMsg = "", bool bWaitHeader = true)
+        {
+            bool blResult = true;
+            if (pstrValue != "" && pstrWebElement != "")
+            {
+                try
+                {
+                    clsReportResult.fnLog("SendKeys", "Step - Sendkeys on " + pstrElement, "info", false, false);
+                    IWebElement objWebEdit = clsWebBrowser.objDriver.FindElement(By.XPath(pstrWebElement));
+                    Actions action = new Actions(clsWebBrowser.objDriver);
+                    objWebEdit.Click();
+                    action.KeyDown(Keys.Control).SendKeys(Keys.Home).Perform();
+                    objWebEdit.SendKeys(Keys.Delete);
+                    objWebEdit.SendKeys(pstrValue);
+                    Thread.Sleep(TimeSpan.FromMilliseconds(500));
+                    //Thread.Sleep(1000);
+
+                    if (bWaitHeader)
+                    {
+                        if (IsElementPresent("//span[@data-bind='text: headerClientName']"))
+                        {
+                            objWebEdit = clsWebBrowser.objDriver.FindElement(By.XPath("//span[@data-bind='text: headerClientName']"));
+                            Thread.Sleep(TimeSpan.FromMilliseconds(500));
+                            objWebEdit.Click();
+                            Thread.Sleep(TimeSpan.FromMilliseconds(500));
+                        }
+                    }
+                    blResult = true;
+                }
+                catch (Exception objException)
+                {
+                    blResult = false;
+                    clsWebElements.fnExceptionHandling(objException);
+                }
+                if (blResult)
+                {
+                    //Step - Click on Submit Button
+                    clsReportResult.fnLog("SendKeys", "The SendKeys for: " + pstrElement + " with value: " + pstrValue + " was done successfully.", "Pass", pblScreenShot, pblHardStop);
+                }
+                else
+                {
+                    blResult = false;
+                    clsReportResult.fnLog("SendKeys", "The SendKeys for: " + pstrElement + " with value: " + pstrValue + " has failed.", "Fail", true, pblHardStop, pstrHardStopMsg);
+                }
+            }
+            return blResult;
+        }
+
 
         public bool fnSelectDropDownWE_(string pstrScreen, string pstrElement, string pstrDropdownValue)
         {
@@ -1145,7 +1195,9 @@ namespace AutomationFramework_GI.POM
 
         public void fnHamburgerMenu(string sptrMenu)
         {
-            clsReportResult.fnLog("Hamburger Menu", "Selecting a Hamburger Menu Option.", "Info", false);
+            clsReportResult.fnLog("Hamburger Menu", "Selecting a Menu Option.", "Info", false);
+            //Verify if menu is collapsed
+            if (IsElementPresent("//div[@id='slide-out' and not(contains(@style, 'translateX(0px)'))]")) { }
             clsWE.fnClick(clsWE.fnGetWe("//div[@class='float-left']//i"), "Hamburger Button", false);
             Thread.Sleep(1000);
             clsWE.fnClick(clsWE.fnGetWe("//a[contains(text(), '" + sptrMenu + "')]"), sptrMenu + " Link", false, true);
