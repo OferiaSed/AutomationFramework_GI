@@ -36,24 +36,15 @@ namespace AutomationFramework_GI.TestCases
         }
 
         [Test]
-        public void fnTest() 
-        {
-            clsLogin login = new clsLogin();
-            clsMegaIntake clsMG = new clsMegaIntake();
-            fnNavigateToUrl(clsMG.fnGetURLEnv("UAT"));
-            //login.fnForgotUsernameVerification("9");
-            login.fnTimeoutSessionVerification("12");
-        }
-
-
-        [Test]
         public void fnTest_DataDriven()
         {
-
             bool blStatus = true;
             clsMegaIntake clsMG = new clsMegaIntake();
             clsLogin clsLogin = new clsLogin();
             clsData objData = new clsData();
+            clsUserManagment clsUM = new clsUserManagment();
+
+
             objData.fnLoadFile(ConfigurationManager.AppSettings["FilePath"], ConfigurationManager.AppSettings["Sheet"]);
             fnNavigateToUrl(clsMG.fnGetURLEnv((objData.fnGetValue("Environment", ""))));
 
@@ -72,7 +63,7 @@ namespace AutomationFramework_GI.TestCases
                         switch (item.ToUpper())
                         {
                             case "LOGIN":
-                                blStatus = clsMG.fnLoginData(TempValue);
+                                blStatus = clsLogin.fnLoginData(TempValue);
                                 break;
                             case "2FALOGIN":
                                 blStatus = clsLogin.fnTwoFactorsVerification(TempValue);
@@ -89,16 +80,8 @@ namespace AutomationFramework_GI.TestCases
                             case "TIMEOUTSESSION":
                                 blStatus = clsLogin.fnTimeoutSessionVerification(TempValue);
                                 break;
-                            case "CREATEINTAKE":
-                                blStatus = clsMG.fnCreateSubmitIntake(TempValue);
-                                break;
-                            case "BRANCHREVIEW":
-                                blStatus = clsMG.fnBranchOfficeVerification(TempValue);
-                                break;
-                            case "INTAKE":
-                                blStatus = clsMG.fnCreateIntake(TempValue);
-                                break;
-                            case "LOCATION":
+                            case "USERMANAGEMENT":
+                                blStatus = clsUM.fnUserMagmtWebUser(TempValue);
                                 break;
                             default:
                                 break;
