@@ -373,7 +373,7 @@ namespace AutomationFramework_GI.POM
                         do
                         {
                             intCount++;
-                            //clsReportResult.fnLog("Timeout session", "Waiting timeout label (" + intCount + ") minute(s).", "Info", false, false);
+                            clsReportResult.fnLog("Timeout session", "Waiting timeout label (" + intCount.ToString() + ") minute(s).", "Info", false, false);
                             Thread.Sleep(TimeSpan.FromMinutes(1));
                             if (clsMG.IsElementPresent("//div[@id='modalSessionNotification' and contains(@style, 'display: block;')]//p[contains(text(), 'Your Session is about to expire ')]")) { bFound = true; }
                         }
@@ -381,12 +381,12 @@ namespace AutomationFramework_GI.POM
                         //Report Log
                         if (bFound)
                         {
-                            //clsReportResult.fnLog("Timeout session", "The timeout session label was displayed successfully for user role: " + objData.fnGetValue("Role", "") + " after " + intCount + " minutes.", "Pass", true, false);
+                            clsReportResult.fnLog("Timeout session", "The timeout session label was displayed successfully for user role: " + objData.fnGetValue("Role", "") + " after " + intCount.ToString() + " minutes.", "Pass", true, false);
                             clsReportResult.fnLog("Timeout session", "The timeout session label was displayed successfully for user role: ", "Pass", true, false);
                         }
                         else
                         {
-                            //clsReportResult.fnLog("Timeout session", "The timeout session label was not displayed for user role: " + objData.fnGetValue("Role", "") + " after " + intCount + " minutes.", "Fail", true, false);
+                            clsReportResult.fnLog("Timeout session", "The timeout session label was not displayed for user role: " + objData.fnGetValue("Role", "") + " after " + intCount.ToString() + " minutes.", "Fail", true, false);
                             blResult = false;
                         }
                     }
