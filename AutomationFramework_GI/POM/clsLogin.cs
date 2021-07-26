@@ -402,6 +402,61 @@ namespace AutomationFramework_GI.POM
             return blResult;
         }
 
+        public bool fnPassResetRestrictions(string pstrSetNo)
+        {
+            bool blResult = true;
+            bool bFound = false;
+            clsMegaIntake mega = new clsMegaIntake();
+            clsData objData = new clsData();
+            clsReportResult.fnLog("Password reset restrictions", "Password reset restrictions Function Starts.", "Info", false);
+            objData.fnLoadFile(ConfigurationManager.AppSettings["FilePath"], "LogInData");
+            for (int intRow = 2; intRow <= objData.RowCount; intRow++)
+            {
+                objData.CurrentRow = intRow;
+                if (objData.fnGetValue("Set", "") == pstrSetNo)
+                {
+                    clsLogin login = new clsLogin();
+                    if (login.fnLoginData(pstrSetNo))
+                    {
+                        //mega.fnHamburgerMenu("User Management"); //Open Hamburguer menu
+                        clsWE.fnClick(clsWE.fnGetWe("//i[@class='fas fa-bars secondary-blue']"), "Side bar menu", true);
+                        clsWE.fnClick(clsWE.fnGetWe("//li[@data-bind='if: MenuItems().UserManagement']"), "User Management dropdown", true); //Clicking User management dropdown
+                        clsWE.fnClick(clsWE.fnGetWe("//li[@data-bind='if: MenuItems().UserManagement' and @class='active']//a[@href='/UserManagement']"), "Web Users", true); //Clicking web users
+                        clsMG.fnCleanAndEnterText("Username", "//input[ @placeholder='Username']", "IntakeAdAbelardo", false, false, "", false); //Entering values to Username field
+                        clsWE.fnClick(clsWE.fnGetWe("//button[@class='btn btn-primary waves-effect waves-light' and contains(text(),'Search')]"), "Search User", true);     
+                        clsWE.fnScrollTo(clsWE.fnGetWe("//table[@id='users']"), "", true, false, "Scroll done");  
+                        clsWE.fnClick(clsWE.fnGetWe("//i[@class='fa fa-edit secondary-blue']"), "User found in list", true);
+                        clsWE.fnScrollTo(clsWE.fnGetWe("//div[@data-bind='visible: Deleted() === false && InvalidUser() === false']"), "", true, false, "Scroll done");
+                        Thread.Sleep(20);
+
+                        try {
+                            Thread.Sleep(20);
+                            if (clsWE.fnElementExist("Disable button", "//button[@class='btn btn-outline-primary waves-effect']//span", false)) {
+                                bFound = true;
+                                if (bFound && clsWE.fnContainsText("Disable Text button", "Disable","Disable",true,false,""))
+                                {
+                                    clsWE.fnClick(clsWE.fnGetWe("//button//span[contains(text(),'Disable')]"), "Disabling user", true);
+                                }
+                                if(!bFound && clsWE.fnContainsText("Enable Text button", "Enable", "Enable", true, false, "")) {
+                                        clsReportResult.fnLog("User already", "The user is already disabled", "Pass", true, false);
+                                }
+                            }
+                            
+                            
+                        }
+                        catch (NoSuchElementException e){
+                            Console.WriteLine("Exception: "+ e);
+                        }
+                        clsWE.fnClick(clsWE.fnGetWe("//button[contains(text(),'Reset Password')]"), "Reseting Password", true);
+                        mega.IsElementPresent("//div[contains(text(), 'The user is disabled. Please 'Enable' the user before making further changes.')]");
+                    }
+
+                }
+            }
+            return blResult;
+        }
+
+
 
         //Functions or methods section
         private string RandomString(int plength)

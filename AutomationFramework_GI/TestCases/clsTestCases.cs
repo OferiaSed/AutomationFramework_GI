@@ -202,7 +202,16 @@ namespace AutomationFramework_GI.TestCases
             }
         }
 
-
+        [Test]
+        public void PassResetRestrictions()
+        {
+            clsMegaIntake clsMG = new clsMegaIntake();
+            clsData objData = new clsData();
+            objData.fnLoadFile(ConfigurationManager.AppSettings["FilePath"], ConfigurationManager.AppSettings["Sheet"]);
+            fnNavigateToUrl(clsMG.fnGetURLEnv((objData.fnGetValue("Environment", ""))));
+            clsLogin login = new clsLogin();
+            login.fnPassResetRestrictions("10");
+        }
 
         [TearDown]
         public void CloseTest()
