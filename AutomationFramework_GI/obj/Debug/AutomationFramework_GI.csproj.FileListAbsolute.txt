@@ -56,3 +56,4 @@ C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\obj\D
 C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\obj\Debug\AutomationFramework_GI.exe
 C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\obj\Debug\AutomationFramework_GI.pdb
 C:\Users\OFeria\Source\Repos\AutomationFramework_GI\AutomationFramework_GI\obj\Debug\AutomationFramework_GI.csproj.AssemblyReference.cache
+C:\Users\abelardo.canche\Documents\GitHub\AutomationFramework_GI\AutomationFramework_GI\obj\Debug\AutomationFramework_GI.csproj.CoreCompileInputs.cache
